@@ -1,0 +1,36 @@
+Alphabet:
+    a. Uppercase and lowercase letters from the english alphabet: ([A-Za-z])
+    b. Digits: [0-9]
+
+Lexic:
+    a. Special symbols, representing:
+        - operators: + - * / = < <= = >= == != ! && ||
+        - separators: { } ( ) [ ] ; <space> 
+        - reserved words: start, end, int, str, arr, char, bool, true, false, scan, print, if, elif, else, while, for
+
+    b. Identifiers
+        - a sequence of letters and digits, such that the first character is a letter and the rest of the characters are either letters or digits.
+
+        Identifier = Letter | Letter {Letter | Digit}
+        Letter = UppercaseLetter | LowercaseLetter
+        UppercaseLetter = "A" | "B" | . ..| "Z" 
+        LowercaseLetter = "a" | "b" | ... | "z"
+        Digit = "0" | NonZeroDigit
+        NonZeroDigit = "1" | ... | "9"
+
+    c. Constants
+        1. integer
+            IntegerConstant = "0" | ["+" | "-"] NonZeroDigit {Digit}
+
+        2. character
+            Character = 'Letter' | 'Digit'
+
+        3. string
+            ConstString = "StringConstant"
+            StringConstant = Char{StringConstant}
+            Char = Letter | Digit
+
+        4. boolean
+            BooleanConstant = "true" | "false"
+
+        Constant = IntegerConstant | CharacterConstant | StringConstant | BooleanConstant

@@ -1,0 +1,43 @@
+Program = "start" CompoundStatement "end"
+
+SimpleType = "int" | "str" | "char" | "bool"
+
+ArrayType = SimpleType " " "arr" "[" IntegerConstant "]"
+
+Type = SimpleType | ArrayType
+
+Declaration = Type " " Identifier
+
+StatementList = Statement ";" | Statement ";" StatementList
+
+Statement = SimpleStatement | StructureStatement
+
+CompoundStatement = "{" StatementList "}"
+
+SimpleStatement = (AssignmentStatement | BoolAssignment | InputOutputStatement | Declaration) ";" 
+
+StructureStatement = CompoundStatement | IfStatement | WhileStatement | ForStatement
+
+IfStatement = "if" Condition Statement {"elif" Condition Statement} ["else" Statement]
+
+ForStatement = "for" "(" "int" AssignmentStatement ";" Condition ";" AssignmentStatement ")" Statement 
+
+WhileStatement = "while" Condition Statement
+
+Expression = [Expression ("+" | "-")] Term
+
+BoolAssignment = Identifier "= true" | Identifier "= false"
+
+AssignmentStatement = Identifier "=" Expression 
+
+Term = Term("*" | "/") Factor | Factor
+
+Factor = "(" Expression ")" | IntegerConstant | Identifier | IndexedIdentifier
+
+IndexedIdentifier = Identifier "[" IntegerConstant "]"
+
+InputOutputStatement = ("scan" "(" Identifier ")") | ("print" "(" (Identifier | Constant) ")")
+
+Relation = "<" | "<=" | "==" | "!=" | ">=" | ">"
+
+Condition = "(" Expression Relation Expression ")"

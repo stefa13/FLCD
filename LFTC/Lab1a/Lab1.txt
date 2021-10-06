@@ -54,12 +54,13 @@ start
     int n;
     int i;
     int sum;
+    int x;
 
     sum = 0;
 
     for (i = 1; i <= n;  i = i + 1) {
-        scan(n);
-        sum = sum + n;
+        scan(x);
+        sum = sum + x;
     }
 
     print(sum);

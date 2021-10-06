@@ -3,41 +3,40 @@ Lexic.txt
 ------------------------------------
 
 Alphabet:
-    a. Uppercase and lowercase letters from the english alphabet: ([A-Za-z])
-    b. Digits: [0-9]
+    a. uppercase and lowercase letters from the english alphabet: ([A-Za-z])
+    b. digits: [0-9]
 
 Lexic:
     a. Special symbols, representing:
-        - operators: + - * / = < <= = >= == != ! && ||
+        - operators: + - * / < > <= = >= == != ! && ||
         - separators: { } ( ) [ ] ; <space> 
         - reserved words: start, end, int, str, arr, char, bool, true, false, scan, print, if, elif, else, while, for
 
-    b. Identifiers
-        - a sequence of letters and digits, such that the first character is a letter and the rest of the characters are either letters or digits.
+    b. identifiers
+        - a sequence of letters and digits, such that the first character is a letter, followed only by letters and then only by digits.
 
-        Identifier = Letter | Letter {Letter | Digit}
-        Letter = UppercaseLetter | LowercaseLetter
-        UppercaseLetter = "A" | "B" | . ..| "Z" 
-        LowercaseLetter = "a" | "b" | ... | "z"
-        Digit = "0" | NonZeroDigit
-        NonZeroDigit = "1" | ... | "9"
+        identifier = letter | letter {letter}{digit}
+        letter = uppercase_letter | lowercase_letter
+        uppercase_letter = "A" | "B" | . ..| "Z" 
+        lowercase_letter = "a" | "b" | ... | "z"
+        digit = "0" | non_zero_digit
+        non_zero_digit = "1" | ... | "9"
 
     c. Constants
         1. integer
-            IntegerConstant = "0" | ["+" | "-"] NonZeroDigit {Digit}
+            integer_constant = "0" | ["+" | "-"] non_zero_digit {digit}
 
         2. character
-            Character = 'Letter' | 'Digit'
+            character_constant = 'character'
+            character = letter | digit
 
         3. string
-            ConstString = "StringConstant"
-            StringConstant = Char{StringConstant}
-            Char = Letter | Digit
+            string_constant = "{character}"
 
         4. boolean
-            BooleanConstant = "true" | "false"
+            boolean_constant = "true" | "false"
 
-        Constant = IntegerConstant | CharacterConstant | StringConstant | BooleanConstant
+        constant = integer_constant | character_constant | string_constant | boolean_constant
 
 
 ---------------------------------------------
@@ -87,46 +86,46 @@ for
 Syntax.in 
 ----------------------------------------
 
-Program = "start" CompoundStatement "end"
+program = "start" compound_statement "end"
 
-SimpleType = "int" | "str" | "char" | "bool"
+simple_type = "int" | "str" | "char" | "bool"
 
-ArrayType = SimpleType " " "arr" "[" IntegerConstant "]"
+array_type = simple_type " " "arr" "[" integer_constant "]"
 
-Type = SimpleType | ArrayType
+type = simple_type | array_type
 
-Declaration = Type " " Identifier
+declaration = type " " identifier
 
-StatementList = Statement ";" | Statement ";" StatementList
+statement_list = statement | statement statement_list
 
-Statement = SimpleStatement | StructureStatement
+statement = simple_statement | structure_statement
 
-CompoundStatement = "{" StatementList "}"
+compound_statement = "{" statement_list "}"
 
-SimpleStatement = (AssignmentStatement | BoolAssignmentStatement | InputOutputStatement | Declaration) ";" 
+simple_statement = (assignment_statement | io_statement | declaration) ";" 
 
-StructureStatement = CompoundStatement | IfStatement | WhileStatement | ForStatement
+structure_statement = compound_statement | if_statement | while_statement | for_statement
 
-IfStatement = "if" Condition Statement {"elif" Condition Statement} ["else" Statement]
+if_statement = "if" condition statement {"elif" condition statement} ["else" statement]
 
-ForStatement = "for" "(" "int" AssignmentStatement ";" Condition ";" AssignmentStatement ")" Statement 
+for_statement = "for" "(" "int" integer_assignment_statement ";" condition ";" assignment_statement ")" statement 
 
-WhileStatement = "while" Condition Statement
+while_statement = "while" condition statement
 
-Expression = [Expression ("+" | "-")] Term
+expression = [expression ("+" | "-")] term
 
-BoolAssignmentStatement = Identifier "= true" | Identifier "= false"
+assignment_statement = integer_assignment_statement | identifier "=" (identifier | character_constant | string_constant | boolean_constant)
 
-AssignmentStatement = Identifier "=" Expression 
+integer_assignment_statement = identifier "=" expression
 
-Term = Term("*" | "/") Factor | Factor
+term = term("*" | "/") factor | factor
 
-Factor = "(" Expression ")" | IntegerConstant | Identifier | IndexedIdentifier
+factor = "(" expression ")" | integer_constant | identifier | indexed_identifier
 
-IndexedIdentifier = Identifier "[" IntegerConstant "]"
+indexed_identifier = identifier "[" integer_constant "]"
 
-InputOutputStatement = ("scan" "(" Identifier ")") | ("print" "(" (Identifier | Constant) ")")
+io_statement = ("scan" "(" identifier ")") | ("print" "(" (identifier | Constant) ")")
 
-Relation = "<" | "<=" | "==" | "!=" | ">=" | ">"
+relation = "<" | "<=" | "==" | "!=" | ">=" | ">"
 
-Condition = "(" Expression Relation Expression ")"
+condition = "(" expression relation expression ")"

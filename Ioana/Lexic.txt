@@ -1,0 +1,91 @@
+Alphabet: 
+
+    a. Upper (A-Z) and lower case letters (a-z) of the English alphabet.  
+
+    b. Underline character '_'; 
+
+    c. Decimal digits (0-9); 
+
+ 
+
+Lexic: 
+
+    a.Special symbols, representing: 
+
+- operators %, +, -, *, /, =, <, <=, =, >=, ==, !=, ===, !== 
+
+- separators ** **, {}, [], () : ; space, tab, new line 
+
+- reserved words: 
+
+Array,  char, do, else,  if, elif, int,  in, write, read, for, foreach, const, string, bool, float 
+
+ 
+
+b.identifiers 
+
+  -a sequence of letters and  digits, such that the first character is a letter or "_"; the rule is: 
+
+    identifier = (letter| underscore) {(letter |digit | underscore)}; 
+
+    letter = "A" | "B" | . ..| "Z" | "a" | … | "z"; 
+
+    digit = "0" | "1" |...| "9"; 
+
+    Underscore = "_" 
+
+ 
+ 
+
+ 
+
+c. Constants 
+
+	digitExcludingZero = "1" | ... | "9" 
+
+1. integer 
+
+IntConst = "0" | ["+" | "-"] digitExcludingZero{Digit} 
+
+ 
+
+2. character  
+
+symbol = "[" | "]" | "{" | "}" | "(" | ")" | "<" | ">" | "=" | "|" | "." | "," | ";" | "*" | "$" | "&" | "^" | "!" | "?" | "|" 
+
+EscapeChar = "\"  (" ’ " | " " " | "\" | "n" | "r" | "t" | "b" | "f" | "v" | "0" | "xFF") 
+
+ 
+
+CharConst = 'Letter' | 'Digit'  | ‘symbol’ | EscapeChar 
+
+ 
+
+3. string 
+
+String= "StringConst" 
+
+StringConst = CharAux{StringConst} 
+
+CharAux = Letter | Digit |  
+
+ 
+
+4. boolean 
+
+BooleanConst = "true" | "false" 
+
+ 
+
+5. float 
+
+FloatConst = digit "." {digit} 
+
+ 
+
+Const = IntConst | CharConst | String| BooleanConst | FloatConst 
+
+ 
+
+ 
+ 

@@ -1,0 +1,90 @@
+Program = "**" CompoundStmt "**" 
+
+ 
+
+AuxType = "int" | "string" | "char" | "bool" | "float " 
+
+ArrayType = "array" | Array
+
+Array = "[" ("" | {(identifier | const) ","} (identifier | const))"]" 
+
+Type = AuxType | ArrayType 
+
+ 
+
+Decl = Identifier "=" (const | identifier) 
+
+ 
+
+StmtList = Stmt { StmtList } 
+
+ 
+
+Stmt = SimpleStmt | StructureStmt 
+
+ 
+
+CompoundStmt = "**" StmtList "**" 
+
+ 
+
+SimpleStmt = AssignmentStmt | InputOutputStmt | Decl 
+
+ 
+
+StructureStmt = CompoundStmt | IfStmt | WhileStmt | ForStmt | ForEachStmt | DoWileStmt 
+
+ 
+
+IfStmt = "if" Cond Stmt {"elif" Cond Stmt} ["else" Stmt] 
+
+ 
+
+Step = (identifier | const) 
+
+ 
+
+ForStmt = "for" "(" identifier "in" "(" (const | identifier) ")"  ["," step]   ")" Stmt  
+
+ForEachStmt = "foreach" "(" Array as (identifier ["=>" identifier] )  ")" Stmt
+
+ 
+
+WhileStmt = "while" Cond Stmt 
+
+
+DoWileStmt = "do" Stmt "while" Cond
+ 
+
+Exp = [Exp ("+" | "-")] Term ["++" | "--"]
+
+ 
+
+BoolAssignmentStmt = Identifier "=" ("true" | "false") 
+
+ 
+
+AssignmentStmt = Identifier ["+" | "-" | "*" | "/"]"=" Exp  
+
+
+ 
+
+Term = Term("*" | "/") Factor | Factor 
+
+ 
+
+Factor = "(" Exp ")" | IntConst | FloatConst | Identifier 
+
+ 
+
+InputOutputStmt = ("read" "(" Identifier ")") | ("write" "(" (Identifier | Constant) ")") 
+
+ 
+
+Rel = "<" | "<=" | "==" | "!=" | ">=" | ">" | | "===" | "!==" 
+
+ 
+
+Cond = "(" Exp Rel Exp ")" 
+
+ 

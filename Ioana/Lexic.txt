@@ -12,7 +12,7 @@ Lexic:
 
     a.Special symbols, representing: 
 
-- operators %, +, -, *, /, =, <, <=, =, >=, ==, !=, ===, !== 
+- operators %, +, -, *, /, =, <, <=, =, >, >=, ==, !=, ===, !== 
 
 - separators ** **, {}, [], () : ; space, tab, new line 
 

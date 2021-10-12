@@ -1,0 +1,18 @@
+Link to GitHub: https://github.com/stefa13/FLCD
+
+I implemented the symbol table based on hash table.
+The symbol table is represented as a list of lists (buckets) that contain strings.
+Besides the class for the symbol table, I also implemented a class called Pair, which will store the tuples representing the positions. The first value will be the hash value (bucket index) and the second value will be the position from the that list (index in bucket)
+
+I implemented the following operations on the symbol table:
+
+- Pair<Integer, Integer> get(String value): method which searches the given value in the symbol table and returns the position of the value if found and null otherwise
+    - first the hash of the value is computed, which represents the index of the bucket where the value could be found
+    - if the hash is invalid, null is returned
+    - then the position of the value from that list is computed
+    - if the value is not present (position == -1), null is returned, otherwise a new Pair with the hash and the position is returned
+
+- Pair<Integer, Integer> put(String value): method which adds the given value to the symbol table and returns its position
+    - first search for the value in the symbol table, if it is found, just returned the Pair corresponding to the position
+    - if it is not found, compute the hash and the position in the corresponding bucket
+    - then add the value to its bucket and return the position tuple where it was inserted

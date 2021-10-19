@@ -1,0 +1,5 @@
+Github link: https://github.com/stefa13/FLCD
+
+Scanner
+
+I defined some constants representing the separators,

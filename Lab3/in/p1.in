@@ -1,0 +1,21 @@
+start
+{
+    int a;
+    int b;
+    int c;
+    int max;
+
+    scan(a);
+    scan(b);
+    scan(c);
+    if (a >= b && a >= c) {
+        max = a;
+    } elif (b >= a && b >= c) {
+        max = b;
+    } else {
+        max = c;
+    }
+
+    print(max);
+}
+end

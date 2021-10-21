@@ -8,12 +8,12 @@ start
     scan(a);
     scan(b);
     scan(c);
-    if (a >= b && a >= c) {
+    if (a>=b && a>= c) {
         max = a;
-    } elif (b >= a && b >= c) {
+    } elif(b >= a && b >=c) {
         max = b;
     } else {
-        max = c;
+        max= c;
     }
 
     print(max);

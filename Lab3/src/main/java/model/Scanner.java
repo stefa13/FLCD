@@ -6,29 +6,82 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Scanner {
     private static final List<String> separators = Arrays.asList("[", "]", "{", "}", "(", ")", ";");
+    private static final List<String> simpleOperators = Arrays.asList(
+        "+", "-", "*", "/", "%", "=", "<", ">", "!"
+    );
 
-    private static final String separatorsString = "[]{}(); ";
-
-    private static final List<String> operators = Arrays.asList(
-        "+", "-", "*", "/", "%", "=", "<", ">", "<=", ">=", "==", "!=", "!", "&&", "||"
+    private static final List<String> compoundOperators = Arrays.asList(
+        "<=", ">=", "==", "!=", "&&", "||"
     );
 
     private static final List<String> reservedWords = Arrays.asList(
         "start", "end", "int", "char", "str", "arr", "while", "for", "if", "elseif", "else", "scan", "print"
     );
 
-//    private static final String REGEX_TO_SPLIT = ";|[0-9]+|=>|(==|!=|<=|>=|&&|\\|\\||\\|[*/%+\\-&|^,=<>])=|<<|>>|==|!=|<=|>=|&&|\\|\\||\\?:|[*/%+\\-,=<>]|[A-Za-z_][0-9A-Za-z_]*|\\(|\\)|\\[|]|{|}";
+    private static final String identifierRegex = "^[a-zA-Z]([a-zA-Z]|[0-9])*$";
+    private static final String constantRegex = "^(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false$";
+    private static Pattern pattern = Pattern.compile("([a-zA-Z]([a-zA-Z]|[0-9])*|(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false|[&]{1,2}|[|]{1,2}|<=|>=|<|>|!=|\\+|-|\\*|%|;|/|\\(|\\)|\\[|\\]|\\{|\\}|!|[=]{1,2}| +)");
+
+    static {
+        final StringBuilder tokenizerRegex = new StringBuilder();
+        tokenizerRegex.append("(");
+
+        for (final String operator : compoundOperators) {
+            tokenizerRegex.append(Pattern.quote(operator)).append("|");
+        }
+
+        for (final String separator : separators) {
+            tokenizerRegex.append(Pattern.quote(separator)).append("|");
+        }
+
+        tokenizerRegex.append("\\s+");
+        tokenizerRegex.append("\\b([0-9]|[a-zA-Z])*\\b").append("|");
+        tokenizerRegex.append(identifierRegex).append("|");
+        tokenizerRegex.append(constantRegex).append("|");
+
+        for (final String operator : simpleOperators) {
+            tokenizerRegex.append(Pattern.quote(operator)).append("|");
+        }
+
+        tokenizerRegex.append(")");
+        pattern = Pattern.compile(tokenizerRegex.toString());
+    }
 
     private static boolean isIdentifier(final String token) {
-        return token.matches("^[a-zA-Z]([a-zA-Z]|[0-9])*$");
+        return token.matches(identifierRegex);
     }
 
     private static boolean isConstant(final String token) {
-        return token.matches("^(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false$");
+        return token.matches(constantRegex);
+    }
+
+    private static List<String> getTokens(String s) {
+        List<String> result = new ArrayList<>();
+        Matcher matcher = pattern.matcher(s);
+        int pos = 0;
+
+        while (matcher.find()) {
+            if (pos != matcher.start()) {
+                result.add(s.substring(pos, matcher.start()));
+            }
+            result.add(matcher.group());
+            pos = matcher.end();
+        }
+        if (pos != s.length()) {
+            result.add(s.substring(pos));
+        }
+
+        return result
+            .stream()
+            .map(String::trim)
+            .filter(string -> string.length() > 0)
+            .collect(Collectors.toList());
     }
 
     public static Pair<SymbolTable, List<Pair<String, Pair<Integer, Integer>>>> scan(final String filename) {
@@ -40,14 +93,12 @@ public class Scanner {
             int lineNumber = 1;
 
             while ((line = bufferedReader.readLine()) != null) {
-                StringTokenizer stringTokenizer = new StringTokenizer(line.strip(), separatorsString, true);
+                var tokens = getTokens(line);
 
-                while (stringTokenizer.hasMoreTokens()) {
-                    String token = stringTokenizer.nextToken().strip();
-
+                for (var token : tokens) {
                     if (token.length() > 0) {
                         System.out.print("Token '" + token + "' -> ");
-                        if (separators.contains(token) || operators.contains(token) || reservedWords.contains(token)) {
+                        if (separators.contains(token) || simpleOperators.contains(token) || compoundOperators.contains(token) || reservedWords.contains(token)) {
                             System.out.println("separator / operator / reserved word");
                             pif.add(new Pair<>(token, new Pair<>(-1, -1)));
                         } else if (isIdentifier(token)) {

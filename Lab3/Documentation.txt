@@ -2,4 +2,11 @@ Github link: https://github.com/stefa13/FLCD
 
 Scanner
 
-I defined some constants representing the separators,
+I defined some lists representing the separators, operators and reserved words.
+I also implemented a method that determines if a given token is identifier or constant and one method that splits a given string into tokens delimited by separators or operators (I used regexes for these).
+In the "scan" method I initialize an empty symbol table and the PIF. I represent the PIF as a list that contains a string ("identifier" if the token is an identifier, "constant" if the token is a constant and the token itself otherwise), and a pair of integers representing the position in the symbol table.
+I iterate through the program line by line. For each line, I split it into tokens and check the type of the token and insert it into the PIF.
+If the token is an identifier/constant I insert the position from the symbol table in the PIF, otherwise I insert the position (-1, -1) in the PIF.
+I also keep track of the number of the line.
+In the end I return a pair containing the symbol table and the PIF.
+If there are any lexical error, the program throws an error specifying the token at which the error was met and the number of the line.

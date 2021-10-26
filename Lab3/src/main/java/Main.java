@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
-    private static final String INPUT_FILENAME = "in/p3.in";
+    private static final String INPUT_FILENAME = "in/p1.in";
 
     public static void main(final String[] args) {
         final Pair<SymbolTable, List<Pair<String, Pair<Integer, Integer>>>> result = Scanner.scan(INPUT_FILENAME);

@@ -26,6 +26,7 @@ public class Scanner {
 
     private static final String identifierRegex = "^[a-zA-Z]([a-zA-Z]|[0-9])*$";
     private static final String constantRegex = "^(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false$";
+    private static final String anyNumberRegex = "([-+]?[0-9]*)";
     private static Pattern pattern = Pattern.compile("([a-zA-Z]([a-zA-Z]|[0-9])*|(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false|[&]{1,2}|[|]{1,2}|<=|>=|<|>|!=|\\+|-|\\*|%|;|/|\\(|\\)|\\[|\\]|\\{|\\}|!|[=]{1,2}| +)");
 
     static {
@@ -42,6 +43,7 @@ public class Scanner {
 
         tokenizerRegex.append("\\s+");
         tokenizerRegex.append("\\b([0-9]|[a-zA-Z])*\\b").append("|");
+        tokenizerRegex.append(anyNumberRegex).append("|");
         tokenizerRegex.append(identifierRegex).append("|");
         tokenizerRegex.append(constantRegex).append("|");
 
@@ -61,20 +63,20 @@ public class Scanner {
         return token.matches(constantRegex);
     }
 
-    private static List<String> getTokens(String s) {
+    private static List<String> getTokens(String line) {
         List<String> result = new ArrayList<>();
-        Matcher matcher = pattern.matcher(s);
+        Matcher matcher = pattern.matcher(line);
         int pos = 0;
 
         while (matcher.find()) {
             if (pos != matcher.start()) {
-                result.add(s.substring(pos, matcher.start()));
+                result.add(line.substring(pos, matcher.start()));
             }
             result.add(matcher.group());
             pos = matcher.end();
         }
-        if (pos != s.length()) {
-            result.add(s.substring(pos));
+        if (pos != line.length()) {
+            result.add(line.substring(pos));
         }
 
         return result

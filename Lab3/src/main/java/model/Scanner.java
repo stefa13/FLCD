@@ -42,8 +42,8 @@ public class Scanner {
         }
 
         tokenizerRegex.append("\\s+");
-        tokenizerRegex.append("\\b([0-9]|[a-zA-Z])*\\b").append("|");
         tokenizerRegex.append(anyNumberRegex).append("|");
+        tokenizerRegex.append("\\b([0-9]|[a-zA-Z])*\\b").append("|");
         tokenizerRegex.append(identifierRegex).append("|");
         tokenizerRegex.append(constantRegex).append("|");
 

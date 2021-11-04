@@ -1,0 +1,9 @@
+q a b k
+0 1
+q
+q a k
+q, 0, q
+q, 1, a
+a, 1, q
+a, 0, b
+b, 0, k

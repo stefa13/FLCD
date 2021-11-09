@@ -1,12 +1,11 @@
 start
 {
-    int 3a;
     int a;
     int b;
     int c;
     int max;
 
-    scan(a);
+    scan(3a);
     scan(b);
     scan(c);
 

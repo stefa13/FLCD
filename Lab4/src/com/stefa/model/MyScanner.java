@@ -27,10 +27,10 @@ public class MyScanner {
         "start", "end", "int", "char", "str", "arr", "while", "for", "if", "elseif", "else", "scan", "print"
     );
 
-    private static final String identifierRegex = "^[a-zA-Z]([a-zA-Z]|[0-9])*$";
-    private static final String constantRegex = "^(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false$";
+    private static final String identifierRegex = "[a-zA-Z]([a-zA-Z]|[0-9])*";
+    private static final String constantRegex = "(0|[-+]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false";
     private static final String anyNumberRegex = "([-+]?[0-9]*)";
-    private static Pattern pattern = Pattern.compile("([a-zA-Z]([a-zA-Z]|[0-9])*|(0|[+\\-]?[1-9][0-9]*)|('([a-zA-Z]|[0-9])')|(\"([a-zA-Z]|[0-9])*\")|true|false|[&]{1,2}|[|]{1,2}|<=|>=|<|>|!=|\\+|-|\\*|%|;|/|\\(|\\)|\\[|\\]|\\{|\\}|!|[=]{1,2}| +)");
+    private static final Pattern pattern;
 
     static {
         final StringBuilder tokenizerRegex = new StringBuilder();
@@ -46,7 +46,7 @@ public class MyScanner {
 
         tokenizerRegex.append("\\s+");
         tokenizerRegex.append(anyNumberRegex).append("|");
-        tokenizerRegex.append("\\b([0-9]|[a-zA-Z])*\\b").append("|");
+        tokenizerRegex.append("\\b([a-zA-Z]|[0-9])*\\b").append("|");
         tokenizerRegex.append(identifierRegex).append("|");
         tokenizerRegex.append(constantRegex).append("|");
 
@@ -55,15 +55,18 @@ public class MyScanner {
         }
 
         tokenizerRegex.append(")");
+
         pattern = Pattern.compile(tokenizerRegex.toString());
     }
 
     private static boolean isIdentifier(final String token) {
-        return token.matches(identifierRegex);
+        return identifierFA.acceptsSequence(token);
+//        return token.matches(identifierRegex);
     }
 
     private static boolean isConstant(final String token) {
-        return token.matches(constantRegex);
+        return integerFA.acceptsSequence(token);
+//        return token.matches(constantRegex);
     }
 
     private static List<String> getTokens(String line) {
@@ -109,10 +112,10 @@ public class MyScanner {
                         if (separators.contains(token) || simpleOperators.contains(token) || compoundOperators.contains(token) || reservedWords.contains(token)) {
                             System.out.println("separator / operator / reserved word");
                             pif.add(new Pair<>(token, new Pair<>(-1, -1)));
-                        } else if (identifierFA.acceptsSequence(token)) {
+                        } else if (isIdentifier(token)) {
                             System.out.println("identifier");
                             pif.add(new Pair<>("identifier", symbolTable.put(token)));
-                        } else if (integerFA.acceptsSequence(token)) {
+                        } else if (isConstant(token)) {
                             System.out.println("constant");
                             pif.add(new Pair<>("constant", symbolTable.put(token)));
                         } else {

@@ -57,9 +57,9 @@ public class FA {
     }
 
     public boolean acceptsSequence(final String sequence) {
-//        if (!isDFA()) {
-//            throw new RuntimeException("This FA is not deterministic");
-//        }
+        if (!isDFA()) {
+            throw new RuntimeException("This FA is not deterministic");
+        }
 
         String currentState = initialState;
 

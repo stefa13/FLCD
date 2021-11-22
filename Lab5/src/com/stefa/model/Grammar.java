@@ -50,6 +50,7 @@ public class Grammar {
             }
             Grammar grammar = new Grammar(nonterminals, terminals, startingSymbol, productions);
             grammar.validate();
+            return grammar;
         } catch(Exception e) {
             e.printStackTrace();
         }

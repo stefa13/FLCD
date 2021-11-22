@@ -33,7 +33,7 @@ public class Main {
                     case "0":
                         System.out.print("Filename: ");
                         String filename = scanner.nextLine();
-                        grammar = Grammar.readGrammarFromFile("in/g1.txt");
+                        grammar = Grammar.readGrammarFromFile("in/g2.txt");
                         break;
                     case "1":
                         System.out.println(grammar.getNonterminals());

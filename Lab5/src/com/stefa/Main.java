@@ -2,11 +2,9 @@ package com.stefa;
 
 
 import com.stefa.model.Grammar;
+import com.stefa.model.Parser;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -17,13 +15,16 @@ public class Main {
         System.out.println("2. Print terminals");
         System.out.println("3. Print the productions");
         System.out.println("4. Print the productions for a given non-terminal");
-        System.out.println("5. Exit");
+        System.out.println("5. Print firstSet");
+        System.out.println("6. Print follow");
+        System.out.println("7. Exit");
     }
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws FileNotFoundException {
         printMenu();
         Scanner scanner = new Scanner(System.in);
         Grammar grammar = null;
+        Parser parser = new Parser("in/g1.txt");
 
         while (true) {
             System.out.print("Option: ");
@@ -33,7 +34,7 @@ public class Main {
                     case "0":
                         System.out.print("Filename: ");
                         String filename = scanner.nextLine();
-                        grammar = Grammar.readGrammarFromFile("in/g2.txt");
+                        grammar = Grammar.readGrammarFromFile("in/g4.txt");
                         break;
                     case "1":
                         System.out.println(grammar.getNonterminals());
@@ -53,6 +54,12 @@ public class Main {
                         System.out.println(production);
                         break;
                     case "5":
+                        System.out.println(Parser.first(grammar));
+                        break;
+                    case "6":
+                        System.out.println(Parser.follow(grammar));
+                        break;
+                    case "7":
                         return;
                     default:
                         System.out.println("Invalid option, please choose one of the options above");

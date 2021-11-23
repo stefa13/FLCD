@@ -1,8 +1,7 @@
-S,A,B,C,D
-a,b,c,d
+S,A,B,C
+a,b,d,e,g,ε
 S
-S -> a A | a C
-A -> A B
-B -> b
-C -> a C | b C b
-D -> b B | d
+S -> A b B | d
+A -> C A b | B a
+B -> g S d | ε
+C -> a | e d

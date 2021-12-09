@@ -5,9 +5,30 @@ import com.stefa.model.Grammar;
 import com.stefa.model.Parser;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
+
+
+
+    public Main() throws FileNotFoundException {
+    }
+
+//
+//    public void parse(List<String> w) {
+//        boolean result = parser.parse(w);
+//        if (result) {
+//            System.out.println("Sequence " + w + " accepted.");
+//            Stack<String> pi = parser.getPi();
+//            System.out.println(pi);
+////            System.out.println(displayPiProductions(pi));
+//        } else {
+//            System.out.println("Sequence " + w + " is not accepted.");
+//        }
+//    }
 
     public static void printMenu() {
         System.out.println("0. Read Grammar from file");
@@ -17,15 +38,16 @@ public class Main {
         System.out.println("4. Print the productions for a given non-terminal");
         System.out.println("5. Print firstSet");
         System.out.println("6. Print follow");
-        System.out.println("7. Exit");
+        System.out.println("7. Print string of productions");
+        System.out.println("8. Exit");
     }
 
     public static void main(final String[] args) throws FileNotFoundException {
         printMenu();
-        Scanner scanner = new Scanner(System.in);
         Grammar grammar = null;
-        Parser parser = new Parser("in/g1.txt");
-
+        grammar = Grammar.readGrammarFromFile("in/g4.txt");
+        Parser parser = new Parser("in/g4.txt");
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("Option: ");
             String option = scanner.nextLine();
@@ -34,7 +56,6 @@ public class Main {
                     case "0":
                         System.out.print("Filename: ");
                         String filename = scanner.nextLine();
-                        grammar = Grammar.readGrammarFromFile("in/g4.txt");
                         break;
                     case "1":
                         System.out.println(grammar.getNonterminals());
@@ -60,6 +81,19 @@ public class Main {
                         System.out.println(Parser.follow(grammar));
                         break;
                     case "7":
+                        List<String> w = Arrays.asList(scanner.nextLine().replace("\n", "").split(" "));
+//                        boolean result = parser.parse(w);
+//                        if (result) {
+//                            System.out.println("Sequence " + w + " accepted.");
+//                            Stack<String> pi = parser.getPi();
+//                            System.out.println(pi);
+////            System.out.println(displayPiProductions(pi));
+//                        } else {
+//                            System.out.println("Sequence " + w + " is not accepted.");
+//                        }
+                        parser.printStringOfProductions(w);
+                        break;
+                    case "8":
                         return;
                     default:
                         System.out.println("Invalid option, please choose one of the options above");

@@ -1,7 +1,6 @@
 package com.stefa.model;
 
 
-import jdk.jfr.DataAmount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -37,7 +36,7 @@ public class Grammar {
                 }
 
                 final String[] rightSide = tokens[1].split("\\|");
-                final Set<List<String>> productionRules = new HashSet<>();
+                final Set<List<String>> productionRules = new LinkedHashSet<>();
                 for (final String rule : rightSide) {
                     productionRules.add(List.of(rule.strip().split("\\s+")));
                 }

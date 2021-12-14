@@ -3,8 +3,9 @@ package com.stefa;
 
 import com.stefa.model.Grammar;
 import com.stefa.model.Parser;
+import com.stefa.model.Tree;
 
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -44,9 +45,9 @@ public class Main {
 
     public static void main(final String[] args) throws FileNotFoundException {
         printMenu();
-        Grammar grammar = null;
-        grammar = Grammar.readGrammarFromFile("in/g4.txt");
-        Parser parser = new Parser("in/g4.txt");
+        String f = "in/g3.txt";
+        Grammar grammar = Grammar.readGrammarFromFile("in/g3.txt");
+        Parser parser = new Parser("in/g3.txt");
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("Option: ");
@@ -81,7 +82,7 @@ public class Main {
                         System.out.println(Parser.follow(grammar));
                         break;
                     case "7":
-                        List<String> w = Arrays.asList(scanner.nextLine().replace("\n", "").split(" "));
+//                        List<String> w = Arrays.asList(scanner.nextLine().replace("\n", "").split(" "));
 //                        boolean result = parser.parse(w);
 //                        if (result) {
 //                            System.out.println("Sequence " + w + " accepted.");
@@ -91,7 +92,21 @@ public class Main {
 //                        } else {
 //                            System.out.println("Sequence " + w + " is not accepted.");
 //                        }
-                        parser.printStringOfProductions(w);
+                        BufferedReader bufferedReader = new BufferedReader(new FileReader("D:\\Facultate\\LimbajeProgramareSiCompilatoare\\FLCD\\Lab5\\in\\PIF2.out"));
+                        List<String> w = Arrays.asList(bufferedReader.readLine().replace("\n", "").split(" "));
+                        if(parser.printStringOfProductions(w)) {
+                            Tree t = new Tree(grammar, parser);
+                            t.build(parser.convertStackToList(parser.getPi()));
+                            t.printTable();
+                            BufferedWriter bufferedWriter;
+                            if (f.equals("in/g1.txt")) {
+                                bufferedWriter = new BufferedWriter(new FileWriter("D:\\Facultate\\LimbajeProgramareSiCompilatoare\\FLCD\\Lab5\\in\\out1.txt"));
+                            } else {
+                                bufferedWriter = new BufferedWriter(new FileWriter("D:\\Facultate\\LimbajeProgramareSiCompilatoare\\FLCD\\Lab5\\in\\out2.txt"));
+                            }
+                            bufferedWriter.write(t.getTableTree());
+                            bufferedWriter.close();
+                        }
                         break;
                     case "8":
                         return;

@@ -1,0 +1,1 @@
+start { int identifier ; scan ( identifier ) ; print ( identifier ) ; if ( identifier >= integer_constant ) { identifier = integer_constant ; } } end

@@ -1,8 +1,21 @@
-S,A,B,C,D
-ε,a,+,*,(,)
-S
-S -> B A
-A -> + B A | ε
-B -> D C
-C -> * D C | ε
-D -> ( S ) | a
+program,simple_type,array_type,type,declaration,statement_list,statement_temp,statement,compound_statement,simple_statement,structure_statement,if_statement,expression,assignment_statement,integer_assignment_statement,term,factor,indexed_identifier,io_statement,relation,condition
+start,end,int,str,char,bool,arr,[,],{,},ε,>=,==,<=,!=,&&,if,elif,for,while,+,-,*,/,(,),<,=,!,>,;,scan,print,integer_constant,identifier,else,string_constant,boolean_constant,character_constant,constant
+program
+program -> start compound_statement end
+simple_type -> int | str | char | bool
+type -> simple_type
+declaration -> type identifier
+statement_list -> statement statement_temp
+statement_temp -> ε | statement_list
+statement -> simple_statement | structure_statement
+compound_statement -> { statement_list }
+simple_statement -> assignment_statement ; | io_statement ; | declaration ;
+structure_statement -> compound_statement | if_statement
+if_statement -> if condition statement else statement | if condition statement
+expression -> term | expression + term | expression - term
+assignment_statement -> identifier = expression | identifier = identifier | identifier = character_constant | identifier = string_constant | identifier = boolean_constant
+term -> factor | term * factor | term / factor
+factor -> identifier | integer_constant | ( expression )
+io_statement -> scan ( identifier ) | print ( identifier ) | print ( constant )
+relation -> < | <= | == | != | >= | >
+condition -> ( expression relation expression )

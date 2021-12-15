@@ -8,13 +8,12 @@ import java.util.stream.Collectors;
 
 @Data
 public class Parser {
+    private static Stack<List<String>> rules = new Stack<>();
     private final Grammar grammar;
     private final Map<String, Set<String>> firstSet;
     private final Map<String, Set<String>> followSet;
     private String fileName;
-
     private ParseTable parseTable = new ParseTable();
-    private static Stack<List<String>> rules = new Stack<>();
     private Map<Pair<String, List<String>>, Integer> productionsNumbered = new HashMap<>();
     private Stack<String> alpha = new Stack<>();
     private Stack<String> beta = new Stack<>();
@@ -152,7 +151,7 @@ public class Parser {
                 continue;
             }
             Integer productionIndex = Integer.parseInt(productionIndexString);
-            this.getProductionsNumbered().forEach((key, value) ->{
+            this.getProductionsNumbered().forEach((key, value) -> {
                 if (productionIndex.equals(value))
                     sb.append(value).append(": ").append(key.getFirst()).append(" -> ").append(key.getSecond()).append("\n");
             });
@@ -173,12 +172,11 @@ public class Parser {
         // M($, $) = acc
 
         parseTable.put(new Pair<>("$", "$"), new Pair<>(Collections.singletonList("acc"), -1));
-        for (String terminal: grammar.getTerminals()) {
-            if(!terminal.equals("ε")) {
+        for (String terminal : grammar.getTerminals()) {
+            if (!terminal.equals("ε")) {
                 parseTable.put(new Pair<>(terminal, terminal), new Pair<>(Collections.singletonList("pop"), -1));
             }
         }
-
 
 
 //        1) M(A, a) = (α, i), if:
@@ -199,16 +197,18 @@ public class Parser {
                 Pair<String, String> parseTableKey = new Pair<>(rowSymbol, columnSymbol);
 
                 // if our column-terminal is exactly first of rule
-                if (rule.get(0).equals(columnSymbol) && !columnSymbol.equals("ε"))
+                if (rule.get(0).equals(columnSymbol) && !columnSymbol.equals("$"))
                     parseTable.put(parseTableKey, parseTableValue);
 
                     // if the first symbol is a non-terminal and it's first contain our column-terminal
                 else if (grammar.getNonterminals().contains(rule.get(0)) && firstSet.get(rule.get(0)).contains(columnSymbol)) {
                     if (!parseTable.containsKey(parseTableKey)) {
                         parseTable.put(parseTableKey, parseTableValue);
+                    } else {
+                        throw new RuntimeException("There is already a value at key: " + parseTableKey + " with value: "
+                            + parseTable.get(parseTableKey) + ". Tried to insert: " + parseTableValue + ". Grammar is not LL(1)");
                     }
-                }
-                else {
+                } else {
                     // if the first symbol is ε then everything if FOLLOW(rowSymbol) will be in parse table
                     if (rule.get(0).equals("ε")) {
                         for (String b : followSet.get(rowSymbol)) {
@@ -220,12 +220,12 @@ public class Parser {
 
                         // if ε is in FIRST(rule)
                     } else {
-                        Set<String> firsts = new HashSet<>();
+                        Set<String> firsts = new LinkedHashSet<>();
                         for (String symbol : rule)
                             if (grammar.getNonterminals().contains(symbol))
                                 firsts.addAll(firstSet.get(symbol));
                         if (firsts.contains("ε")) {
-                            for (String b : firstSet.get(rowSymbol)) {
+                            for (String b : followSet.get(rowSymbol)) {
                                 if (b.equals("ε"))
                                     b = "$";
                                 parseTableKey = new Pair<>(rowSymbol, b);
@@ -240,14 +240,15 @@ public class Parser {
         });
     }
 
-    public void printStringOfProductions(List<String> sequence){
+    public boolean printStringOfProductions(List<String> sequence) {
         boolean result = this.parse(sequence);
-        if(result){
+        if (result) {
             System.out.println("Sequence " + sequence + " is accepted");
             System.out.println(displayPiProductions(this.pi));
-        } else{
+        } else {
             System.out.println("Sequence " + sequence + " is not accepted");
         }
+        return result;
     }
 
     public boolean parse(List<String> w) {
@@ -268,15 +269,6 @@ public class Parser {
             Pair<String, String> heads = new Pair<>(betaHead, alphaHead);
             Pair<List<String>, Integer> parseTableEntry = parseTable.get(heads);
 
-//            if (parseTableEntry == null) {
-//                heads = new Pair<>(betaHead, "ε");
-//                parseTableEntry = parseTable.get(heads);
-//                if (parseTableEntry != null) {
-//                    beta.pop();
-//                    continue;
-//                }
-//
-//            }
 
             if (parseTableEntry == null) {
                 go = false;
@@ -304,14 +296,14 @@ public class Parser {
         return result;
     }
 
-//    public boolean parseSource(List<Pair<Integer, Integer>> pif) {
-//        List<String> sequence = new LinkedList<>();
-//        for (Pair<Integer, Integer> pifEntry : pif) {
-//            sequence.add(String.valueOf(pifEntry.getFirst()));
-//        }
-//
-//        return this.parse(sequence);
-//    }
+    public Pair<String, List<String>> getProductionForIndex(int index) {
+        for (var key : productionsNumbered.keySet()) {
+            if (productionsNumbered.get(key) == index) {
+                return key;
+            }
+        }
+        return null;
+    }
 
     private void initializeStacks(List<String> w) {
         alpha.clear();
@@ -334,10 +326,21 @@ public class Parser {
 
     private void numberingProductions() {
         int index = 1;
-        for (Production production: grammar.getProductions())
-            for (List<String> rule: production.getRules())
+        for (Production production : grammar.getProductions())
+            for (List<String> rule : production.getRules())
                 productionsNumbered.put(new Pair<>(production.getStartingNonTerminalSymbol(), rule), index++);
-        System.out.println(productionsNumbered);
+    }
+
+    public List<Integer> getPiProductions() {
+        final List<Integer> piProductions = new ArrayList<>();
+        while (!pi.isEmpty()) {
+            final String value = pi.pop();
+            if (!"ε".equals(value)) {
+                piProductions.add(Integer.valueOf(value));
+            }
+        }
+        Collections.reverse(piProductions);
+        return piProductions;
     }
 
 }

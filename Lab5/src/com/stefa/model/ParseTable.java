@@ -47,7 +47,7 @@ public class ParseTable {
                 Pair<List<String>, Integer> value = entry.getValue();
 
                 sb.append("M[").append(key.getFirst()).append(",").append(key.getSecond()).append("] = [")
-                        .append(value.getFirst()).append(",").append(value.getSecond()).append("]\n");
+                    .append(value.getFirst()).append(",").append(value.getSecond()).append("]\n");
             }
         }
 

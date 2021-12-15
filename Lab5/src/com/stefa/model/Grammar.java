@@ -1,7 +1,6 @@
 package com.stefa.model;
 
 
-import jdk.jfr.DataAmount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -37,7 +36,7 @@ public class Grammar {
                 }
 
                 final String[] rightSide = tokens[1].split("\\|");
-                final Set<List<String>> productionRules = new HashSet<>();
+                final Set<List<String>> productionRules = new LinkedHashSet<>();
                 for (final String rule : rightSide) {
                     productionRules.add(List.of(rule.strip().split("\\s+")));
                 }
@@ -51,7 +50,7 @@ public class Grammar {
             Grammar grammar = new Grammar(nonterminals, terminals, startingSymbol, productions);
             grammar.validate();
             return grammar;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         throw new RuntimeException("Could not read grammar:(");
@@ -83,4 +82,13 @@ public class Grammar {
             .findAny()
             .orElse(null);
     }
+
+    public boolean isTerminal(final String symbol) {
+        return terminals.contains(symbol);
+    }
+
+    public boolean isNonterminal(final String symbol) {
+        return nonterminals.contains(symbol);
+    }
+
 }
